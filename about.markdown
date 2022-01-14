@@ -4,15 +4,9 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+TMy name is Scott Wright. I live in Marietta, Georgia. I am Married and have two children. My wife and I run a small
+business called Salon Suites where we rent furnished suites to hair stylists and other beauty industry professionals
+where they can run their own business.
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
-
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
-
-
-[jekyll-organization]: https://github.com/jekyll
+I have been developing software and managing and tuning databases for 40 years, sometimes as a side job, sometimes
+as full time job, and currently in pursuit of a SAAS product I hope to one day bring to market.
