@@ -3,6 +3,8 @@ layout: post
 title:  WordleQuarant on Twitter
 date: 2022-01-14 09:58:05 -0500
 categories: twitter games word_games
+redirect_from:
+  - /twitter/games/word_games/2022/01/14/wordlequarant-on-twitter
 ---
 [@WordleQuarant](https://twitter.com/wordlequarant) is a Twitter account created by [Dieter Bohn](https://twitter.com/backlon)
 to do 1 simple thing: Allow people to post their [Wordle](https://www.powerlanguage.co.uk/wordle/) results to their

@@ -3,6 +3,8 @@ layout: post
 title:  "It's the Little Things"
 date:   2017-06-02 10:17:00 -0500
 categories: apple ios ui
+redirect_from:
+  - /apple/ios/ui/2017/06/02/its-the-little-things
 ---
 
 One of the reasons I use Apple products is that they get the little things right. Even the seemingly little things that take a lot of work behind the scenes. Apple is especially good at anticipating helpful conveniences and, when I need them, they're there. Take the tapbacks in Messages - these are the little bubbles that can be added in messages to like, question, lol at, etc. a previous message in the thread. Great stuff, cleans up the timeline in busy group messages. Well done Apple. But wait, who liked my message? Who gave it a thumbs down? Not only do I get a realtime message when someone interacts with a previous message (it's a notification and not part of the timeline), but when scrolling back through a timeline I can long press on the tapback bubble and see all the tapbacks for that text at the top of my screen, and at the top of the screen I can tap on the particular icon, HaHa, for example, and see the contact image for everyone who laughed at that text. All the bases were covered.

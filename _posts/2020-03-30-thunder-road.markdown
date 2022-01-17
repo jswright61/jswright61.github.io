@@ -3,6 +3,8 @@ layout: post
 title:  "Thunder Road"
 date:   2020-03-30 13:00:00 -0500
 categories: media music bruce
+redirect_from:
+  - /media/music/bruce/2020/03/30/thunder-road
 ---
 
 [![Youtube video](http://img.youtube.com/vi/9KPMkKOWgVs/0.jpg)](http://www.youtube.com/watch?v=9KPMkKOWgVs )

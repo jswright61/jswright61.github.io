@@ -23,14 +23,19 @@ title: the Wright Perspective
 description: >- # this means to ignore newlines until "baseurl:"
   Random ill-formed thoughts from Scott Wright.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://wrightperspective.net" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: jswright61
 github_username:  jswright61
+permalink: /:year/:long_month/:title
 
 # Build settings
 theme: minima
 plugins:
   - jekyll-feed
+  - jekyll-redirect-from
+
+whitelist:
+  - jekyll-redirect-from
 
 # Exclude from processing.
 # The following items will not be processed, by default.
