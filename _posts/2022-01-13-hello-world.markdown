@@ -3,6 +3,8 @@ layout: post
 title:  "Hello World!"
 date:   2022-01-13 08:44:58 -0500
 categories: blog_meta
+redirect_from:
+  - /blog_meta/2022/01/13/hello-world
 ---
 # Hello from the Wright Perspective
 
