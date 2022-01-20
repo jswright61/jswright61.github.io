@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title:  "Hello World!"
 date:   2022-01-13 08:44:58 -0500
 categories: blog_meta

@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title:  WordleQuarant on Twitter
 date: 2022-01-14 09:58:05 -0500
 categories: twitter games word_games
@@ -16,7 +16,7 @@ How does one make sure only these
 self selected followers see their Wordle results? Start a new Tweet with the very first characters "@WordleQuarant ",
 no dots or spaces before the @, the space after coulld be a return or just a space, and then paste the copied Worsle results. Here is a recent example:
 
-[![Wordle Post example](/assets/wordle_tweet.png)](https://twitter.com/jswright61/status/1481938097717882881 )
+[![Wordle Post example](/assets/images/wordle_tweet.png)](https://twitter.com/jswright61/status/1481938097717882881 )
 
 Why does this work? It goes back to the early days of Twitter. Tweets that start with an @mention, by default, are seen
 only by the mentioned party and those that follow both the author and the mentioned party. The tweets are public and
