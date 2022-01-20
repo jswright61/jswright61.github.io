@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title:  "Thunder Road"
 date:   2020-03-30 13:00:00 -0500
 categories: media music bruce

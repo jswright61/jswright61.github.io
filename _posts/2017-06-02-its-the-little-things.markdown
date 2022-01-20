@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title:  "It's the Little Things"
 date:   2017-06-02 10:17:00 -0500
 categories: apple ios ui
@@ -15,11 +15,11 @@ Nicknames. There, I said it. Apple could make iOS way better in a lot of areas b
 
 The image below shows my current Bluetooth devices. Some names are better than other. MY-CAR works for me, but my wife has the same MY-CAR in her Bluetooth devices and it's not hers.
 
-![Bluetooth devices screenshot]({{ site.url }}/assets/bluetooth_1.png)
+![Bluetooth devices screenshot]({{ site.url }}/assets/images/bluetooth_1.png)
 
 When I tap the i next to the first item above (Bluetooth - HORRIBLE name) I get the following screen. What if there was a nickname text box that allowed me to give this device a meaningful name (Porch Speakers in this case) and when saved, the above list would then display the nickname I just gave it instead of the stupid name the manufacturer used.
 
-![Bluetooth device detail image]({{ site.url }}/assets/bluetooth_2.jpeg)
+![Bluetooth device detail image]({{ site.url }}/assets/images/bluetooth_2.jpeg)
 
 WiFi too. And especially here. How many 2Wrire, Linksys, or Netgear WiFi networks do you see? Maybe the device owner has no idea how to change the SSID, or maybe they don't want to call attention to their network. Maybe you know the SSID and password for your neighbors WiFi - maybe they're on AT&T and you're on Comcast and you've shared credentials for when one network is down. Wouldn't it be nice to have the network show up as "William's WiFi" instead of 2WIRE7843?
 
