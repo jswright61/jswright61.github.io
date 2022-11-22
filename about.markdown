@@ -9,4 +9,6 @@ business called Salon Suites where we rent furnished suites to hair stylists and
 where they can run their own business.
 
 I have been developing software and managing and tuning databases for 40 years, sometimes as a side job, sometimes
-as full time job, and currently in pursuit of a SAAS product I hope to one day bring to market.
+as full time job, and currently in building systems and tools to support our main business.
+
+You can find on Mastodon: <a rel="me" href="https://ruby.social/@jswright61">@jswright61@ruby.social</a>
