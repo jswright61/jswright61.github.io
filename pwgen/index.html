@@ -83,6 +83,8 @@
       color: var(--muted);
       font-size: 14px;
     }
+    #entropy { white-space: nowrap; }
+    .controls { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
     .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
     .seg button {
       border: 0;
@@ -92,6 +94,7 @@
       padding: 4px 12px;
       cursor: pointer;
     }
+    .seg button.sym { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 16px; padding: 4px 14px; }
     .seg button[aria-pressed="true"] { background: var(--card); color: var(--text); font-weight: 600; }
     .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .actions button {
@@ -119,9 +122,16 @@
     <div id="password" title="Click to copy" aria-live="polite">&nbsp;</div>
     <div class="meta">
       <span id="entropy"></span>
-      <span class="seg" role="group" aria-label="Number of words">
-        <button type="button" data-words="4">4 words</button>
-        <button type="button" data-words="5">5 words</button>
+      <span class="controls">
+        <span class="seg" id="words" role="group" aria-label="Number of words">
+          <button type="button" data-value="4">4 words</button>
+          <button type="button" data-value="5">5 words</button>
+        </span>
+        <span class="seg" id="delimiter" role="group" aria-label="Word separator">
+          <button type="button" data-value=" ">Space</button>
+          <button type="button" class="sym" data-value=".">.</button>
+          <button type="button" class="sym" data-value="-">-</button>
+        </span>
       </span>
     </div>
     <div class="actions">
@@ -140,16 +150,20 @@
 
     const SPECIAL_CHARS = "&@?!";
     const DIGITS = "0123456789";
+    const DELIMITERS = [" ", ".", "-"];
     const WORD_COUNT_KEY = "pwgen.words";
+    const DELIMITER_KEY = "pwgen.delimiter";
 
     const passwordEl = document.getElementById("password");
     const entropyEl = document.getElementById("entropy");
     const statusEl = document.getElementById("status");
-    const segButtons = document.querySelectorAll(".seg button");
+    const wordButtons = document.querySelectorAll("#words button");
+    const delimiterButtons = document.querySelectorAll("#delimiter button");
 
     let wordlist = [];
     let password = "";
     let wordCount = 4;
+    let delimiter = " ";
 
     // Uniform integer in [0, n) from the CSPRNG, using rejection sampling to avoid modulo bias.
     function randomInt(n) {
@@ -172,16 +186,22 @@
     }
 
     // Suffix always goes last: on iOS that's a single switch to the number keyboard.
+    // With a space it stays separated; with "." or "-" it attaches to the last word.
     function generate() {
       const words = Array.from({ length: wordCount }, () => {
         const word = sample(wordlist);
         return word[0].toUpperCase() + word.slice(1);
       });
       const suffix = generateRandomString();
-      password = `${words.join(" ")} ${suffix}`;
+      const joined = words.join(delimiter) + (delimiter === " " ? " " : "");
+      password = joined + suffix;
 
+      // Explicit break points after each separator, so a line never starts with "." or "-".
       passwordEl.textContent = "";
-      passwordEl.append(words.join(" ") + " ");
+      words.forEach((word, i) => {
+        passwordEl.append(i < words.length - 1 || delimiter === " " ? word + delimiter : word);
+        passwordEl.append(document.createElement("wbr"));
+      });
       const span = document.createElement("span");
       span.className = "suffix";
       span.textContent = suffix;
@@ -197,9 +217,15 @@
 
     function setWordCount(n) {
       wordCount = n;
-      segButtons.forEach((b) => b.setAttribute("aria-pressed", String(Number(b.dataset.words) === n)));
+      wordButtons.forEach((b) => b.setAttribute("aria-pressed", String(Number(b.dataset.value) === n)));
       entropyEl.textContent = `≈ ${Math.round(entropyBits())} bits`;
       try { localStorage.setItem(WORD_COUNT_KEY, String(n)); } catch (_) {}
+    }
+
+    function setDelimiter(d) {
+      delimiter = d;
+      delimiterButtons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.value === d)));
+      try { localStorage.setItem(DELIMITER_KEY, d); } catch (_) {}
     }
 
     let statusTimer;
@@ -228,8 +254,12 @@
     document.getElementById("generate").addEventListener("click", generate);
     document.getElementById("copy").addEventListener("click", copy);
     passwordEl.addEventListener("click", copy);
-    segButtons.forEach((b) => b.addEventListener("click", () => {
-      setWordCount(Number(b.dataset.words));
+    wordButtons.forEach((b) => b.addEventListener("click", () => {
+      setWordCount(Number(b.dataset.value));
+      generate();
+    }));
+    delimiterButtons.forEach((b) => b.addEventListener("click", () => {
+      setDelimiter(b.dataset.value);
       generate();
     }));
 
@@ -241,6 +271,10 @@
       let saved = 4;
       try { saved = Number(localStorage.getItem(WORD_COUNT_KEY)) || 4; } catch (_) {}
       setWordCount(saved === 5 ? 5 : 4);
+
+      let savedDelimiter = " ";
+      try { savedDelimiter = localStorage.getItem(DELIMITER_KEY) ?? " "; } catch (_) {}
+      setDelimiter(DELIMITERS.includes(savedDelimiter) ? savedDelimiter : " ");
       generate();
     }
 
