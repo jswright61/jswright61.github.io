@@ -1,5 +1,5 @@
 // Serves the page from cache so it works offline, refreshing the cache in the background.
-const CACHE = "pwgen-v3";
+const CACHE = "pwgen-v4";
 const FILES = ["./", "index.html", "words.txt", "manifest.webmanifest", "icon-180.png", "icon-512.png"];
 
 self.addEventListener("install", (event) => {
