@@ -1,14 +1,26 @@
 /* Tag Studio layout engine. Browser-native; no build step. */
 (function(root){
 'use strict';
-const baseLines=(name,reverse)=>[
- {title:'Header',text:'REWARD & THANKS FOR RETURN',field:'none',bold:true},
- {title:'Name',text:name,field:'name',bold:false},
- {title:'Email',text:'TRAVELER@EXAMPLE.COM',field:'email',bold:false},
- {title:'Phone 1',text:reverse?'+1 404-555-1001':'+1 404-555-1002',field:'mobile',bold:false},
- {title:'Phone 2',text:reverse?'+1 404-555-1002':'+1 404-555-1001',field:'mobile',bold:false}];
-const presets={large:{shape:'angled',width:4.375,height:2.25,topEdge:3.5625,endHeight:1.125,left:.5,right:.625,top:.375,bottom:.375,hole:true,holeDiameter:.25,holeInset:.375,lines:baseLines('A. Traveler',true)},smallS:{shape:'rectangle',width:3.75,height:2.25,topEdge:3,endHeight:1.125,left:.375,right:.625,top:.375,bottom:.375,hole:false,holeDiameter:.25,holeInset:.375,lines:baseLines('A. Traveler',true)},smallC:{shape:'rectangle',width:3.75,height:2.25,topEdge:3,endHeight:1.125,left:.375,right:.625,top:.375,bottom:.375,hole:false,holeDiameter:.25,holeInset:.375,lines:baseLines('B. Traveler',false)}};
-function preset(key){return JSON.parse(JSON.stringify({...presets[key],qr:true,fontMax:24,paper:'letter',orientation:'auto',cols:2,rows:3,cutLines:true}));}
+const header='REWARD & THANKS FOR RETURN';
+const sheet={qr:true,fontMax:24,paper:'letter',orientation:'auto',cols:2,rows:3,cutLines:true};
+const seeds={
+ templates:[
+  {name:'Shacke',shape:'angled',width:4.375,height:2.25,topEdge:3.5625,endHeight:1.125,left:.5,right:.625,top:.375,bottom:.375,hole:true,holeDiameter:.25,holeInset:.375,...sheet},
+  {name:'Smoafy',shape:'rectangle',width:3.75,height:2.25,topEdge:3,endHeight:1.125,left:.375,right:.625,top:.375,bottom:.375,hole:false,holeDiameter:.25,holeInset:.375,...sheet}],
+ tagData:[{header,name:'A. Traveler',email:'ATRAVELER@EXAMPLE.COM',tel1:'+1 404-555-1001',tel2:'+1 404-555-1002'}]};
+function defaults(kind){return JSON.parse(JSON.stringify(seeds[kind]));}
+const blankTemplate=()=>({name:'',shape:'angled',width:'',height:'',topEdge:'',endHeight:'',left:'',right:'',top:'',bottom:'',hole:false,holeDiameter:'',holeInset:'',qr:true,fontMax:'',paper:'letter',orientation:'auto',cols:'',rows:'',cutLines:true});
+const blankTagData=()=>({header,name:'',email:'',tel1:'',tel2:''});
+function template(t){if(!t||typeof t!=='object'||Array.isArray(t))throw Error('Invalid template.');const out=blankTemplate();for(const k in out)if(k in t)out[k]=t[k];out.name=String(out.name).trim().slice(0,60);for(const k of ['qr','hole','cutLines'])out[k]=!!out[k];for(const [k,allowed] of Object.entries({shape:['rectangle','angled'],paper:['letter','a4'],orientation:['auto','portrait','landscape']}))if(!allowed.includes(out[k]))throw Error('Invalid '+k+'.');return out;}
+/* Tag data is flat JSON ({key: text}). The vCard field and bold are inferred from the key; a value of {text, field, bold} overrides them. */
+const fieldKinds=['none','name','email','mobile','phone','url','note'];
+function fieldFor(key){const k=key.toLowerCase();return k==='name'?'name':/^e-?mail/.test(k)?'email':/^(tel|phone|mobile|cell)/.test(k)?'mobile':/^(url|web)/.test(k)?'url':/^note/.test(k)?'note':'none';}
+const boldFor=key=>key.toLowerCase()==='header';
+function tagDataLines(c){if(!c||typeof c!=='object'||Array.isArray(c))throw Error('Invalid tag data.');return Object.entries(c).slice(0,12).map(([key,v])=>{const o=v&&typeof v==='object',text=String((o?v.text:v)??'');if(text.length>250)throw Error('Tag data line is too long.');return{key,text,field:o&&fieldKinds.includes(v.field)?v.field:fieldFor(key),bold:o?!!v.bold:boldFor(key)};});}
+function tagDataObject(lines){const out={};for(const l of lines)out[l.key]=l.field===fieldFor(l.key)&&l.bold===boldFor(l.key)?l.text:{text:l.text,field:l.field,bold:l.bold};return out;}
+const tagData=c=>tagDataObject(tagDataLines(c));
+const tagDataName=c=>String((c.name&&typeof c.name==='object'?c.name.text:c.name)??'').trim();
+function design(t,lines){return{...t,lines:lines.map(l=>({title:l.key,text:l.text,field:l.field,bold:l.bold}))};}
 function inches(v){if(typeof v==='number')return v;const s=String(v).trim().replace(/[″"]/g,'');if(/^\d+(\.\d+)?$/.test(s)||/^\.\d+$/.test(s))return Number(s);const m=s.match(/^(?:(\d+)\s+)?(\d+)\/(\d+)$/);return m&&+m[3]>0?(+(m[1]||0)+(+m[2]/+m[3])):NaN;}
 const esc=s=>String(s).replace(/\\/g,'\\\\').replace(/\r?\n/g,'\\n').replace(/;/g,'\\;').replace(/,/g,'\\,');
 function vcard(lines){let out=['BEGIN:VCARD','VERSION:3.0'],named=false;for(const l of lines){const t=l.text.trim();if(!t||l.field==='none')continue;switch(l.field){case'name':if(!named){out.push('FN:'+esc(t));const parts=t.split(/\s+/);const last=parts.length>1?parts.pop():t;out.push('N:'+esc(last)+';'+esc(parts.length?parts.join(' '):'')+';;;');named=true;}break;case'email':out.push('EMAIL;TYPE=INTERNET:'+esc(t));break;case'mobile':case'phone':out.push('TEL;TYPE='+ (l.field==='mobile'?'CELL':'VOICE')+':'+esc(t.replace(/[\s().-]/g,'')));break;case'url':out.push('URL:'+esc(t));break;case'note':out.push('NOTE:'+esc(t));break;}}
@@ -49,5 +61,5 @@ function qrRuns(m,callback){if(!m.state.qr)return;const mod=m.qrSize/(m.matrix.l
 function cutSegments(m){const a=[],n=m.n;if(!m.state.cutLines)return a;for(let c=0;c<=m.cols;c++)a.push([m.x0+c*n.width,14.4,m.x0+c*n.width,m.ph-14.4]);for(let r=0;r<=m.rows;r++)a.push([14.4,m.y0+r*n.height,m.pw-14.4,m.y0+r*n.height]);if(m.state.shape==='angled')for(let r=0;r<m.rows;r++)for(let c=0;c<m.cols;c++){const x=m.x0+c*n.width,y=m.y0+r*n.height;a.push([x+n.topEdge,y,x+n.width,y+(n.height-n.endHeight)/2],[x+n.topEdge,y+n.height,x+n.width,y+(n.height+n.endHeight)/2]);}return a;}
 function pdfDocument(m){const p=m.pdf;p.setProperties({title:'Luggage tag inserts',subject:'Print at 100% / Actual Size',creator:'Tag Studio'});for(let r=0;r<m.rows;r++)for(let c=0;c<m.cols;c++){const x=m.x0+c*m.n.width,y=m.y0+r*m.n.height;p.setTextColor(0);p.setFillColor(0);for(const l of m.placed){p.setFont('helvetica',l.bold?'bold':'normal');p.setFontSize(m.font);p.text(l.text,x+l.x,y+l.y);}qrRuns(m,(qx,qy,w,h)=>p.rect(x+qx,y+qy,w+.06,h+.06,'F'));if(m.state.shape==='angled'&&m.state.hole){p.setDrawColor(140);p.setLineWidth(.3);p.circle(x+m.n.width-m.n.holeInset,y+m.n.height/2,m.n.holeDiameter/2,'S');}}
 p.setDrawColor(145);p.setLineWidth(.3);for(const s of cutSegments(m))p.line(...s);return p;}
-root.TagCore={preset,inches,vcard,compute,outline,qrRuns,cutSegments,pdfDocument};
+root.TagCore={defaults,blankTemplate,blankTagData,template,tagData,tagDataName,tagDataLines,tagDataObject,fieldFor,design,inches,vcard,compute,outline,qrRuns,cutSegments,pdfDocument};
 })(globalThis);
