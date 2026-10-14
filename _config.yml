@@ -73,3 +73,17 @@ analytics:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
+
+# Setting exclude replaces Jekyll's defaults, so they're repeated here
+exclude:
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - bin/

@@ -1,0 +1,46 @@
+#!/Users/scott/.local/script_stable_rubies/ruby-4.0
+#
+# Safety net for publishing without bin/publish: blocks a push to main when a
+# post it would publish isn't dated today. bin/publish moves dates to today
+# before it pushes, so its pushes always pass.
+#
+# Bypass (not recommended): git push --no-verify
+
+require_relative "../bin/post_dates"
+
+ZERO_SHA = /\A0+\z/
+
+today = Date.today
+problems = []
+
+$stdin.each_line do |line|
+  _local_ref, local_sha, remote_ref, remote_sha = line.split
+  next unless remote_ref == "refs/heads/main"
+  next if ZERO_SHA.match?(local_sha)
+
+  base = ZERO_SHA.match?(remote_sha) ? nil : remote_sha
+  if base && !system("git", "cat-file", "-e", "#{base}^{commit}", err: File::NULL)
+    abort "pre-push: origin/main has commits you don't have locally. Run `git fetch` and try again."
+  end
+
+  PostDates.new_posts(base, local_sha).each do |path|
+    date = PostDates.publish_date(`git show #{local_sha}:#{path}`)
+    next if date == today
+
+    problems << "  #{path} #{PostDates.problem(date, today) || "is dated #{PostDates.pretty(date)}, not today."}"
+  end
+end
+
+exit if problems.empty?
+
+warn <<~MSG
+
+  Push blocked: these posts aren't dated today.
+
+  #{problems.join("\n")}
+
+  Publish with bin/publish, which moves recent dates to today and blocks
+  ones that need a closer look.
+
+MSG
+exit 1

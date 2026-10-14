@@ -1,0 +1,112 @@
+#!/Users/scott/.local/script_stable_rubies/ruby-4.0
+
+require_relative "post_dates"
+
+USAGE = <<~USAGE
+  Usage: bin/publish
+
+  Publishes the site: pushes develop to origin/main, which GitHub Pages builds.
+
+  Each post new since origin/main gets today as its publish date, so the date
+  shown on the post matches when it went live. The date is moved only if it's
+  this month and within the last #{PostDates::MAX_CALENDAR_DAYS} calendar days. Otherwise nothing is
+  changed or pushed: check the copy for references that depend on when it's
+  published ("last month", "earlier this week"), set `date:` yourself, commit,
+  and run this again.
+
+  Run from develop with no uncommitted changes.
+
+  Options:
+    -h, --help   Show this help message
+USAGE
+
+if %w[-h --help].include?(ARGV[0])
+  puts USAGE
+  exit
+end
+
+def git(*args)
+  system("git", *args) || abort("publish: `git #{args.join(" ")}` failed")
+end
+
+def git_out(*args)
+  out = IO.popen(["git", *args], &:read)
+  $?.success? || abort("publish: `git #{args.join(" ")}` failed")
+  out
+end
+
+def ancestor?(older, newer)
+  system("git", "merge-base", "--is-ancestor", older, newer)
+end
+
+Dir.chdir(git_out("rev-parse", "--show-toplevel").strip)
+
+branch = git_out("branch", "--show-current").strip
+abort "publish: switch to develop first (on #{branch.inspect})." unless branch == "develop"
+unless git_out("status", "--porcelain", "--untracked-files=no").empty?
+  abort "publish: commit or stash your changes first."
+end
+
+git("fetch", "--quiet", "origin")
+abort "publish: develop is missing commits from origin/main." unless ancestor?("origin/main", "develop")
+abort "publish: main has commits that aren't on develop." unless ancestor?("main", "develop")
+
+today = Date.today
+posts = PostDates.new_posts("origin/main", "develop").map do |path|
+  text = File.read(path)
+  {path: path, text: text, date: PostDates.publish_date(text), title: PostDates.title(text, path)}
+end
+
+problems = posts.filter_map do |post|
+  message = PostDates.problem(post[:date], today)
+  "  #{post[:path]} #{message}" if message
+end
+
+unless problems.empty?
+  abort <<~MSG
+
+    Not published: these posts need a publish date check.
+
+    #{problems.join("\n")}
+
+    Read each post for references that depend on when it's published ("last month",
+    "earlier this week"), update the copy if needed, set `date:` to the date you're
+    publishing, commit, and run bin/publish again.
+
+  MSG
+end
+
+stale = posts.reject { |post| post[:date] == today }
+stale.each do |post|
+  now = Time.now.strftime("%Y-%m-%d %H:%M:%S %z")
+  fm = PostDates.front_matter(post[:text])
+  File.write(post[:path], post[:text].sub(fm, fm.sub(/^date:.*$/, "date: #{now}")))
+
+  target = File.join("_posts", File.basename(post[:path]).sub(/\A\d{4}-\d{2}-\d{2}-/, "#{today.iso8601}-"))
+  if target != post[:path]
+    git("mv", post[:path], target)
+    post[:path] = target
+  end
+  git("add", post[:path])
+  puts "Moved #{post[:title].inspect} from #{PostDates.pretty(post[:date])} to today."
+end
+
+unless stale.empty?
+  subject = (stale.size == 1) ? "Updates Publish Date for #{stale.first[:title]}" : "Updates Publish Dates for New Posts"
+  git("commit", "--quiet", "-m", subject)
+end
+
+git("checkout", "--quiet", "main")
+begin
+  git("merge", "--quiet", "--ff-only", "develop")
+  git("push", "--quiet", "origin", "main")
+ensure
+  git("checkout", "--quiet", "develop")
+end
+
+if posts.empty?
+  puts "Published. No new posts."
+else
+  puts "Published:"
+  posts.each { |post| puts "  #{post[:title]} (#{PostDates.pretty(today)})" }
+end
