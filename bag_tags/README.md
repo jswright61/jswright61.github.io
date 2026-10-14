@@ -1,4 +1,4 @@
-# Tag Studio
+# Bag Tags
 
 A static luggage tag designer. Open `index.html` in a browser, or upload this folder to any static web host. No Node.js, npm installation, build step, backend, or external service is needed to run it. All runtime dependencies are included under `vendor/`.
 
@@ -10,7 +10,7 @@ The engine uses one fitted font size across all lines, distributes them vertical
 
 All tags on a sheet share edges. Auto orientation selects portrait if it fits; otherwise landscape if it fits. Print downloaded PDFs at **100% / Actual Size**; disable Fit to page. Trim rectangles first, then angled corners, then punch the marked holes. A physical print-and-scan check is recommended after changing dimensions.
 
-Templates and tag data are stored as JSON arrays in this browser's localStorage under `tag-studio-templates` and `tag-studio-tag-data`; `tag-studio-selection` remembers the last selection. When a key is missing, it is seeded with the defaults from `core.js`: the **Shacke** (angled) and **Smoafy** (rectangular) templates and the **A. Traveler** tag data. Edits are not saved until you press a Save button. Contact information is not sent to a backend.
+Templates and tag data are stored as JSON arrays in this browser's localStorage under `bag-tags-templates` and `bag-tags-tag-data`; `bag-tags-selection` remembers the last selection. When a key is missing, it is seeded with the defaults from `core.js`: the **Shacke** (angled) and **Smoafy** (rectangular) templates and the **A. Traveler** tag data. Edits are not saved until you press a Save button. Contact information is not sent to a backend.
 
 Tag data is flat JSON, so it can hold any set of lines:
 

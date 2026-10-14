@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#153e3d"><title>Tag Studio Privacy</title><meta name="description" content="Tag Studio runs entirely in your browser. Your details are never sent to a server."><link rel="stylesheet" href="style.css"></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#153e3d"><title>Bag Tags Privacy</title><meta name="description" content="Bag Tags runs entirely in your browser. Your details are never sent to a server."><link rel="stylesheet" href="style.css"></head>
 <body>
-<header class="topbar"><a class="brand" href="./" aria-label="Tag Studio home"><span class="brand-icon">◇</span> Tag Studio <span class="edition">PRIVACY</span></a><div class="top-actions"><a class="quiet" href="./">Back to Tag Studio</a></div></header>
+<header class="topbar"><a class="brand" href="./" aria-label="Bag Tags home"><span class="brand-icon">◇</span> Bag Tags <span class="edition">PRIVACY</span></a><div class="top-actions"><a class="quiet" href="./">Back to Bag Tags</a></div></header>
 <main class="doc">
 <span class="eyebrow">PRIVACY</span>
 <h1>Your details stay on your device.</h1>
-<p class="lede">Tag Studio runs entirely in your browser. There is no account, no server, and no database. The names, emails, and phone numbers you enter are never sent anywhere. They are saved only in this browser on this device, and your PDF is created on your device.</p>
+<p class="lede">Bag Tags runs entirely in your browser. There is no account, no server, and no database. The names, emails, and phone numbers you enter are never sent anywhere. They are saved only in this browser on this device, and your PDF is created on your device.</p>
 
 <ul class="promises">
 <li><strong>No server</strong><span>Nothing you type is uploaded. The app has no backend to send it to.</span></li>
@@ -17,19 +17,19 @@
 <div class="table-wrap"><table>
 <thead><tr><th>Data</th><th>Where it goes</th></tr></thead>
 <tbody>
-<tr><td>Tag data (header, name, email, phones)</td><td>This browser's local storage, under <code>tag-studio-tag-data</code>, when you press Save.</td></tr>
-<tr><td>Templates (shape, sizes, margins)</td><td>This browser's local storage, under <code>tag-studio-templates</code>, when you press Save.</td></tr>
-<tr><td>Your last selection</td><td>This browser's local storage, under <code>tag-studio-selection</code>.</td></tr>
+<tr><td>Tag data (header, name, email, phones)</td><td>This browser's local storage, under <code>bag-tags-tag-data</code>, when you press Save.</td></tr>
+<tr><td>Templates (shape, sizes, margins)</td><td>This browser's local storage, under <code>bag-tags-templates</code>, when you press Save.</td></tr>
+<tr><td>Your last selection</td><td>This browser's local storage, under <code>bag-tags-selection</code>.</td></tr>
 <tr><td>The PDF</td><td>Generated in your browser and saved to your device as a download.</td></tr>
 <tr><td>The QR code</td><td>Generated in your browser. It is drawn into the preview and the PDF.</td></tr>
 <tr><td>Exported backups</td><td>A JSON file saved to your device as a download.</td></tr>
 </tbody></table></div>
-<p>Local storage belongs to this browser on this device. It is not a cookie, it is not sent with web requests, and other websites cannot read it. It is not encrypted, though, so anyone using the same browser profile can open Tag Studio and see what you saved.</p>
+<p>Local storage belongs to this browser on this device. It is not a cookie, it is not sent with web requests, and other websites cannot read it. It is not encrypted, though, so anyone using the same browser profile can open Bag Tags and see what you saved.</p>
 
 <h2>What does leave your device</h2>
 <p>Only things you choose to send, plus the page itself:</p>
 <ul>
-<li><strong>Loading the page.</strong> Your browser downloads Tag Studio's files from wrightperspective.net, which is hosted by GitHub Pages. Like any website visit, the host can see your IP address and browser type. These requests never include anything you enter in the app.</li>
+<li><strong>Loading the page.</strong> Your browser downloads the Bag Tags files from wrightperspective.net, which is hosted by GitHub Pages. Like any website visit, the host can see your IP address and browser type. These requests never include anything you enter in the app.</li>
 <li><strong>Printing.</strong> The PDF goes wherever you send it: your printer, a print shop, or a cloud print service.</li>
 <li><strong>Files you save.</strong> If your Downloads folder syncs to a cloud service, your PDFs and exported backups sync with it.</li>
 <li><strong>The tag itself.</strong> The printed tag and its QR code show your contact details. That is their purpose: anyone who finds your bag can read them or scan the code to save your contact.</li>
@@ -51,7 +51,7 @@
 <h2>Check it yourself</h2>
 <p>You don't have to take this page's word for it:</p>
 <ol>
-<li>Open Tag Studio, then turn off Wi-Fi or switch on airplane mode. Editing, saving, PDF download, and import/export all keep working.</li>
+<li>Open Bag Tags, then turn off Wi-Fi or switch on airplane mode. Editing, saving, PDF download, and import/export all keep working.</li>
 <li>Open your browser's developer tools, go to the <strong>Network</strong> tab, and use the app. After the initial page load, no requests are made.</li>
 <li>Read the source. There is no build step, so the files your browser runs are the source: <a href="app.js">app.js</a> and <a href="core.js">core.js</a> (plus the page itself, via View Source), and the two bundled libraries, <a href="vendor/jspdf.umd.min.js">jsPDF</a> and <a href="vendor/qrcode.js">qrcode-generator</a>.</li>
 </ol>

@@ -1,4 +1,4 @@
-/* Tag Studio layout engine. Browser-native; no build step. */
+/* Bag Tags layout engine. Browser-native; no build step. */
 (function(root){
 'use strict';
 const header='REWARD & THANKS FOR RETURN';
@@ -59,7 +59,7 @@ function compute(state,PDF,qrFactory){
 function outline(m){const n=m.n;return m.state.shape==='angled'?[[0,0],[n.topEdge,0],[n.width,(n.height-n.endHeight)/2],[n.width,(n.height+n.endHeight)/2],[n.topEdge,n.height],[0,n.height]]:[[0,0],[n.width,0],[n.width,n.height],[0,n.height]];}
 function qrRuns(m,callback){if(!m.state.qr)return;const mod=m.qrSize/(m.matrix.length+8);for(let r=0;r<m.matrix.length;r++){let c=0;while(c<m.matrix.length){if(!m.matrix[r][c]){c++;continue;}let start=c;while(c<m.matrix.length&&m.matrix[r][c])c++;callback(m.qx+(start+4)*mod,m.qy+(r+4)*mod,(c-start)*mod,mod);}}}
 function cutSegments(m){const a=[],n=m.n;if(!m.state.cutLines)return a;for(let c=0;c<=m.cols;c++)a.push([m.x0+c*n.width,14.4,m.x0+c*n.width,m.ph-14.4]);for(let r=0;r<=m.rows;r++)a.push([14.4,m.y0+r*n.height,m.pw-14.4,m.y0+r*n.height]);if(m.state.shape==='angled')for(let r=0;r<m.rows;r++)for(let c=0;c<m.cols;c++){const x=m.x0+c*n.width,y=m.y0+r*n.height;a.push([x+n.topEdge,y,x+n.width,y+(n.height-n.endHeight)/2],[x+n.topEdge,y+n.height,x+n.width,y+(n.height+n.endHeight)/2]);}return a;}
-function pdfDocument(m){const p=m.pdf;p.setProperties({title:'Luggage tag inserts',subject:'Print at 100% / Actual Size',creator:'Tag Studio'});for(let r=0;r<m.rows;r++)for(let c=0;c<m.cols;c++){const x=m.x0+c*m.n.width,y=m.y0+r*m.n.height;p.setTextColor(0);p.setFillColor(0);for(const l of m.placed){p.setFont('helvetica',l.bold?'bold':'normal');p.setFontSize(m.font);p.text(l.text,x+l.x,y+l.y);}qrRuns(m,(qx,qy,w,h)=>p.rect(x+qx,y+qy,w+.06,h+.06,'F'));if(m.state.shape==='angled'&&m.state.hole){p.setDrawColor(140);p.setLineWidth(.3);p.circle(x+m.n.width-m.n.holeInset,y+m.n.height/2,m.n.holeDiameter/2,'S');}}
+function pdfDocument(m){const p=m.pdf;p.setProperties({title:'Luggage tag inserts',subject:'Print at 100% / Actual Size',creator:'Bag Tags'});for(let r=0;r<m.rows;r++)for(let c=0;c<m.cols;c++){const x=m.x0+c*m.n.width,y=m.y0+r*m.n.height;p.setTextColor(0);p.setFillColor(0);for(const l of m.placed){p.setFont('helvetica',l.bold?'bold':'normal');p.setFontSize(m.font);p.text(l.text,x+l.x,y+l.y);}qrRuns(m,(qx,qy,w,h)=>p.rect(x+qx,y+qy,w+.06,h+.06,'F'));if(m.state.shape==='angled'&&m.state.hole){p.setDrawColor(140);p.setLineWidth(.3);p.circle(x+m.n.width-m.n.holeInset,y+m.n.height/2,m.n.holeDiameter/2,'S');}}
 p.setDrawColor(145);p.setLineWidth(.3);for(const s of cutSegments(m))p.line(...s);return p;}
 root.TagCore={defaults,blankTemplate,blankTagData,template,tagData,tagDataName,tagDataLines,tagDataObject,fieldFor,design,inches,vcard,compute,outline,qrRuns,cutSegments,pdfDocument};
 })(globalThis);
