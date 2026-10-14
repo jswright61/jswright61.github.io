@@ -1,0 +1,8 @@
+{% if page.collection == "posts" and page.date %}
+  <p class="page__meta page__meta--published">
+    <span class="page__meta-date">
+      <i class="far fa-calendar-alt" aria-hidden="true"></i>
+      Published: <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%-d %B, %Y" }}</time>
+    </span>
+  </p>
+{% endif %}
